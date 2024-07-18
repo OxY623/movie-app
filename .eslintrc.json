@@ -11,12 +11,17 @@
     "plugin:import/errors",
     "plugin:import/warnings"
   ],
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
     },
     "ecmaVersion": 12,
-    "sourceType": "module"
+    "sourceType": "module",
+    "requireConfigFile": false,
+    "babelOptions": {
+      "presets": ["@babel/preset-react", "@babel/preset-env"]
+    }
   },
   "plugins": ["react", "prettier", "import"],
   "rules": {
@@ -24,8 +29,7 @@
     "prettier/prettier": "error",
     "linebreak-style": [0, "unix"],
     "quotes": ["error", "single"],
-    // Отключаем правило semi или устанавливаем значение "always"
-    "semi": ["error", "always"],
+    "semi": ["error", "never"],
     "react/react-in-jsx-scope": "off",
     "react/prop-types": 0,
     "import/no-unresolved": [2, { "caseSensitive": false }],
@@ -45,9 +49,6 @@
       }
     ]
   },
-//  "react": {
-//    "version": "detect"
-//  },
   "settings": {
     "import/resolver": {
       "node": {
