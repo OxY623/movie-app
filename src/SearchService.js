@@ -1,4 +1,4 @@
-class SearchService {
+export default class SearchService {
   constructor(baseURL, apiKey) {
     this.baseURL = baseURL
     this.apiKey = apiKey
@@ -7,6 +7,9 @@ class SearchService {
   async getResults(query) {
     if (!query) {
       throw new Error('Query is required')
+    }
+    if (query.length === 0) {
+      throw new Error('Пустой поисковый запрос')
     }
 
     const response = await fetch(
@@ -18,5 +21,3 @@ class SearchService {
     return await response.json()
   }
 }
-
-export default SearchService

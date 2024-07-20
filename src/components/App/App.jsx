@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Layout } from 'antd'
+import { Layout, Spin, Button, Result, Alert } from 'antd'
 
 import MovieCards from '../MovieCard/MovieCard'
 import SearchService from '../../SearchService'
@@ -29,9 +29,13 @@ export default class App extends Component {
     return genreIds.map((id) => this.genreMapping[id] || 'Unknown')
   }
 
+  handleClickBtn = () => {
+    window.location.reload()
+  }
+
   componentDidMount() {
     this.searchService
-      .getResults('oxy')
+      .getResults('artem')
       .then((data) => {
         this.setState({ data: data.results })
       })
@@ -48,11 +52,27 @@ export default class App extends Component {
           <h1 style={{ textAlign: 'center', margin: '20px 0' }}>Movie App</h1>
           <div className="inner-content">
             {this.state.error ? (
-              <div style={{ color: 'red', textAlign: 'center' }}>{this.state.error}</div>
+              // <div style={{ color: 'red', textAlign: 'center' }}>{this.state.error}</div>
+              <>
+                <Result
+                  status="404"
+                  title="404"
+                  subTitle={`Sorry, ${this.state.error}`}
+                  extra={
+                    <Button type="primary" onClick={this.handleClickBtn}>
+                      Update page now
+                    </Button>
+                  }
+                />
+                <Alert message="Error" description={this.state.error} type="error" showIcon />
+              </>
             ) : this.state.data ? (
               <MovieCards getGenres={this.getGenres} cards={this.state.data} />
             ) : (
-              <div style={{ textAlign: 'center' }}>Loading...</div>
+              // <div style={{ textAlign: 'center' }}>Loading...</div>
+              <div className="spinner-wrapper">
+                <Spin size="large" />
+              </div>
             )}
           </div>
         </Content>

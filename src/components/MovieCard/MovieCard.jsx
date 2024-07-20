@@ -3,7 +3,7 @@ import { Card, Rate, Tag } from 'antd'
 import { StarOutlined, StarFilled } from '@ant-design/icons'
 import { format } from 'date-fns'
 
-import noImage from './no_image.jpg'
+import noImage from './no-image.jpg'
 import './MovieCard.css'
 
 const MovieCards = ({ cards, getGenres }) => {
