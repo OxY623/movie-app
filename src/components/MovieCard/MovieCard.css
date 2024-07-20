@@ -1,11 +1,23 @@
+.card-item__card {
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+    width: 454px;
+    height: 281px;
+}
+.card-item{
+    margin: 0 !important;
+    padding: 0 !important;
+}
 .ant-card-body {
+    /*width: 454px;*/
     margin: 0 !important;
     padding: 0 !important;
 }
 
-.ant-card-body > div {
-    width: 454px;
+.card-item__content {
+    /*width: 454px;*/
     height: 281px;
+    display: flex;
+    flex-direction: row;
 }
 
 .card-item__image {
@@ -13,16 +25,101 @@
     height: 281px;
 }
 
-.card-item__overview{
-    width: 228px;
-    max-height: 129px;
+.card-item__details {
+    margin: 12px 10px 0 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0;
+}
+
+.card-item__header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 35px;
+    width: 100%;
+
+
+}
+.card-item__release-date{
+    margin-bottom: 5px !important;
+}
+.card-item__title {
+    color: rgb(0, 0, 0);
+    font-family: 'Inter', serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 28px;
+    text-align: left;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+}
+
+.card-item__rating {
+    border: 2px solid rgb(233, 209, 0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     color: rgb(0, 0, 0);
-    font-family: Inter UI;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
+    line-height: 22px;
+}
+
+.card-item__overview {
+    width: 228px;
+    height: 129px;
+    color: rgb(0, 0, 0);
+    font-family: 'Inter', serif;
     font-size: 12px;
     font-weight: 400;
     line-height: 22px;
-    letter-spacing: 0px;
+    overflow: hidden;
     text-align: left;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 6;
+}
+
+.card-item__release-date {
+    color: rgb(130, 126, 126);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 22px;
+    text-align: left;
+}
+
+.card-item__genres {
+    text-align: left;
+}
+
+.card-item__genres span {
+    color: rgba(0, 0, 0, 0.65);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 15px;
+    text-align: left;
+}
+
+.ant-rate {
+    display: flex !important;
+    justify-content: flex-start !important;
+    width: 239px;
+    height: 46px;
+}
+
+.ant-rate-star {
+    width: 7% !important;
+    height: auto !important;
+}
+
+.ant-rate-star-zero .anticon {
+    color: lightgray; /* Цвет для пустых звезд */
 }
