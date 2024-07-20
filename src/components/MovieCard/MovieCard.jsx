@@ -7,6 +7,11 @@ import noImage from './no-image.jpg'
 import './MovieCard.css'
 
 const MovieCards = ({ cards, getGenres }) => {
+  const parseReleaseDate = (releaseDate) => {
+    const date = new Date(releaseDate)
+    return isNaN(date.getTime()) ? 'Unknown release date' : format(date, 'MMMM d, yyyy')
+  }
+
   return (
     <ul
       style={{
@@ -32,7 +37,7 @@ const MovieCards = ({ cards, getGenres }) => {
                   <h3 className="card-item__title">{card.title}</h3>
                   <div className="card-item__rating">{card.vote_average.toFixed(1)}</div>
                 </div>
-                <p className="card-item__release-date">{format(new Date(card.release_date), 'MMMM d, yyyy')}</p>
+                <p className="card-item__release-date">{parseReleaseDate(card.release_date)}</p>
                 <div className="card-item__genres">
                   {getGenres(card.genre_ids).map((genre, index) => (
                     <Tag key={index}>{genre}</Tag>

@@ -71,7 +71,7 @@ export default class App extends Component {
             ) : (
               // <div style={{ textAlign: 'center' }}>Loading...</div>
               <div className="spinner-wrapper">
-                <Spin size="large" />
+                <Spin tip="Loading" size="large" />
               </div>
             )}
           </div>
