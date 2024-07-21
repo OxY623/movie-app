@@ -26,7 +26,7 @@
 }
 
 .card-item__image {
-    /*width: 183px;*/
+    width: 183px;
     height: 280px;
     border-radius: 10px;
 }

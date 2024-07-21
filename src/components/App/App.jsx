@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
-import { Layout, Spin, Button, Result, Alert } from 'antd'
+import { Layout } from 'antd'
 
-import MovieCards from '../MovieCard/MovieCard'
+import MyHeader from '../MyHeader'
+// import MovieCards from '../MovieCards'
+import MyContent from '../MyContent'
+import MyFooter from '../MyFooter'
 import SearchService from '../../SearchService'
 
 import 'antd/dist/reset.css'
 import './App.css'
 
-const { Content } = Layout
-
+// const { Content } = Layout
 export default class App extends Component {
   constructor(props) {
     super(props)
@@ -35,7 +37,7 @@ export default class App extends Component {
 
   componentDidMount() {
     this.searchService
-      .getResults('artem')
+      .getResults('return')
       .then((data) => {
         this.setState({ data: data.results })
       })
@@ -47,35 +49,49 @@ export default class App extends Component {
 
   render() {
     return (
-      <Layout style={{ minHeight: '100vh' }}>
-        <Content>
-          <h1 style={{ textAlign: 'center', margin: '20px 0' }}>Movie App</h1>
-          <div className="inner-content">
-            {this.state.error ? (
-              // <div style={{ color: 'red', textAlign: 'center' }}>{this.state.error}</div>
-              <>
-                <Result
-                  status="404"
-                  title="404"
-                  subTitle={`Sorry, ${this.state.error}`}
-                  extra={
-                    <Button type="primary" onClick={this.handleClickBtn}>
-                      Update page now
-                    </Button>
-                  }
-                />
-                <Alert message="Error" description={this.state.error} type="error" showIcon />
-              </>
-            ) : this.state.data ? (
-              <MovieCards getGenres={this.getGenres} cards={this.state.data} />
-            ) : (
-              // <div style={{ textAlign: 'center' }}>Loading...</div>
-              <div className="spinner-wrapper">
-                <Spin tip="Loading" size="large" />
-              </div>
-            )}
-          </div>
-        </Content>
+      <Layout style={{ minHeight: '100vh', width: '100%' }}>
+        <MyHeader />
+        <Layout>
+          <MyContent
+            handleClickBtn={this.handleClickBtn}
+            getGenres={this.getGenres}
+            state={this.state}
+            genreMapping={this.genreMapping}
+          />
+          {/*<Content>*/}
+          {/*  /!*<h1 style={{ textAlign: 'center', margin: '20px 0' }}>Movie App</h1>*!/*/}
+          {/*  <div className="inner-content">*/}
+          {/*    <Input placeholder="Type to search..." style={{ width: '100%', marginBottom: 34 }} />*/}
+          {/*    {this.state.error ? (*/}
+          {/*      // <div style={{ color: 'red', textAlign: 'center' }}>{this.state.error}</div>*/}
+          {/*      <>*/}
+          {/*        <Result*/}
+          {/*          status="404"*/}
+          {/*          title="404"*/}
+          {/*          subTitle={`Sorry, ${this.state.error}`}*/}
+          {/*          extra={*/}
+          {/*            <Button type="primary" onClick={this.handleClickBtn}>*/}
+          {/*              Update page now*/}
+          {/*            </Button>*/}
+          {/*          }*/}
+          {/*        />*/}
+          {/*        <Alert message="Error" description={this.state.error} type="error" showIcon />*/}
+          {/*      </>*/}
+          {/*    ) : this.state.data ? (*/}
+          {/*      <MovieCards getGenres={this.getGenres} cards={this.state.data} />*/}
+          {/*    ) : (*/}
+          {/*      // <div style={{ textAlign: 'center' }}>Loading...</div>*/}
+          {/*      <div className="spinner-wrapper">*/}
+          {/*        <Spin size="large" />*/}
+          {/*      </div>*/}
+          {/*    )}*/}
+          {/*  </div>*/}
+          {/*</Content>*/}
+        </Layout>
+        {/*<Footer style={{ backgroundColor: '#F0EFEF' }}>*/}
+        {/*  <Pagination align="center" defaultCurrent={1} total={50} />*/}
+        {/*</Footer>*/}
+        <MyFooter />
       </Layout>
     )
   }

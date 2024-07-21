@@ -4,12 +4,17 @@ import { StarOutlined, StarFilled } from '@ant-design/icons'
 import { format } from 'date-fns'
 
 import noImage from './no-image.jpg'
-import './MovieCard.css'
+import './MovieCards.css'
 
 const MovieCards = ({ cards, getGenres }) => {
   const parseReleaseDate = (releaseDate) => {
     const date = new Date(releaseDate)
     return isNaN(date.getTime()) ? 'Unknown release date' : format(date, 'MMMM d, yyyy')
+  }
+
+  // Проверка наличия и корректности данных перед использованием метода map
+  if (!cards || !Array.isArray(cards)) {
+    return <div>No movies available</div> // Сообщение, если карты не переданы или не массив
   }
 
   return (
@@ -18,7 +23,7 @@ const MovieCards = ({ cards, getGenres }) => {
         listStyleType: 'none',
         padding: 0,
         display: 'grid',
-        gridTemplateColumns: 'repeat(2, 1fr)',
+        gridTemplateColumns: 'repeat(2, minmax(451px, 1fr))',
         gap: 36,
       }}
     >
@@ -35,18 +40,20 @@ const MovieCards = ({ cards, getGenres }) => {
               <div className="card-item__details">
                 <div className="card-item__header">
                   <h3 className="card-item__title">{card.title}</h3>
-                  <div className="card-item__rating">{card.vote_average.toFixed(1)}</div>
+                  <div className="card-item__rating">{card.vote_average ? card.vote_average.toFixed(1) : 'N/A'}</div>
                 </div>
                 <p className="card-item__release-date">{parseReleaseDate(card.release_date)}</p>
                 <div className="card-item__genres">
-                  {getGenres(card.genre_ids).map((genre, index) => (
-                    <Tag key={index}>{genre}</Tag>
-                  ))}
+                  {card.genre_ids && card.genre_ids.length > 0 ? (
+                    getGenres(card.genre_ids).map((genre, index) => <Tag key={index}>{genre}</Tag>)
+                  ) : (
+                    <Tag>No genres available</Tag>
+                  )}
                 </div>
                 <p className="card-item__overview">{card.overview}</p>
                 <Rate
                   disabled
-                  value={card.vote_average}
+                  value={card.vote_average || 0}
                   character={({ index }) => {
                     return index < Math.floor(card.vote_average) ? <StarFilled /> : <StarOutlined />
                   }}

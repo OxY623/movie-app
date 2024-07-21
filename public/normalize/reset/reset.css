@@ -15,6 +15,10 @@ body {
     flex-direction: column;
 }
 
+.ant-layout{
+    background-color: #F0EFEF;
+}
+
 .wrapper {
     width: auto;
 }
