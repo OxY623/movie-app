@@ -10,18 +10,16 @@ import SearchService from '../../SearchService'
 import 'antd/dist/reset.css'
 import './App.css'
 
+const apiKey = 'be07142a60bd7787c2f5699d101a5566'
+const baseUrl = 'https://api.themoviedb.org'
+const genreUrl = `${baseUrl}/3/genre/movie/list?api_key=${apiKey}&language=en-US`
 export default class App extends Component {
   constructor(props) {
     super(props)
-    this.searchService = new SearchService('https://api.themoviedb.org', 'be07142a60bd7787c2f5699d101a5566')
-    this.genreMapping = {
-      878: 'Science Fiction',
-      28: 'Action',
-      14: 'Fantasy',
-      12: 'Adventure',
-    }
+    this.searchService = new SearchService(baseUrl, apiKey)
+    this.genreMapping = {}
     this.state = {
-      query: 'search',
+      query: 'return',
       data: null,
       loading: false,
       error: null,
@@ -53,7 +51,7 @@ export default class App extends Component {
     const { query, page } = this.state
 
     // if (!query) {
-    //   console.log('Поисковый запрос пуст')
+    //   console.log('❌ Поисковый запрос пуст')
     //   return
     // }
 
@@ -64,12 +62,27 @@ export default class App extends Component {
         this.setState({ data: data.results, totalPages: data.total_pages, loading: false })
       })
       .catch((error) => {
-        console.error('Error fetching data:', error)
-        this.setState({ error: 'Ошибка при загрузке данных', loading: false })
+        console.error('❌ Error fetching data:', error)
+        this.setState({ error: '❌ Ошибка при загрузке данных', loading: false })
       })
   }
 
   componentDidMount() {
+    fetch(genreUrl)
+      .then((res) => {
+        return res.json()
+      })
+      .then((data) => {
+        const genres = data.genres
+        const genreMap = genres.reduce((acc, genre) => {
+          acc[genre.id] = genre.name
+          return acc
+        }, {})
+        this.genreMapping = genreMap
+      })
+      .catch((error) => {
+        console.error('Error fetching genres:', error)
+      })
     this.fetchData()
   }
 

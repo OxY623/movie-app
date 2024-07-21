@@ -3,7 +3,7 @@ import { Card, Rate, Tag } from 'antd'
 import { StarOutlined, StarFilled } from '@ant-design/icons'
 import { format } from 'date-fns'
 
-import './MovieCard.css' // Не забудьте создать этот файл для стилей
+import './MovieCard.css'
 
 import noImage from './no-image.jpg'
 

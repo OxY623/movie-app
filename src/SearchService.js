@@ -6,10 +6,16 @@ export default class SearchService {
 
   async getResults(query = 'search', page = 1) {
     // if (!query) {
-    //   throw new Error('Query is required')
+    //   throw new Error('❌ Query is required')
     // }
     // if (query.length === 0) {
-    //   return
+    //   throw new Error('❌ Пустой поисковый запрос')
+    // }
+    // if (page <= 0) {
+    //   throw new Error('❌ Номер страницы должен быть положительным числом')
+    // }
+    // if (query.length === 0 && page > 1) {
+    //   throw new Error('❌ Такого не может быть')
     // }
 
     const response = await fetch(
