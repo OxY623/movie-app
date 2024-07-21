@@ -2,10 +2,10 @@ import React from 'react'
 import { Pagination, Layout } from 'antd'
 
 const { Footer } = Layout
-const MyFooter = () => {
+const MyFooter = ({ totalPages, handlePageChange }) => {
   return (
     <Footer style={{ backgroundColor: '#F0EFEF' }}>
-      <Pagination align="center" defaultCurrent={1} total={50} />
+      <Pagination onChange={handlePageChange} align="center" defaultCurrent={1} total={totalPages * 10} />
     </Footer>
   )
 }

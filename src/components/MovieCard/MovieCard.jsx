@@ -26,7 +26,7 @@ const MovieCard = ({ card, getGenres }) => {
           <div className="card-item__details">
             <div className="card-item__header">
               <h3 className="card-item__title">{card.title}</h3>
-              <div className="card-item__rating">{card.vote_average ? card.vote_average.toFixed(1) : 'N/A'}</div>
+              <div className="card-item__rating">{card.vote_average ? card.vote_average.toFixed(1) : '?'}</div>
             </div>
             <p className="card-item__release-date">{parseReleaseDate(card.release_date)}</p>
             <div className="card-item__genres">

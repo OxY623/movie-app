@@ -63,6 +63,7 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
+    max-width: 80%;
 }
 
 .card-item__rating {

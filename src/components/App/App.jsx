@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Layout } from 'antd'
+import { debounce } from 'lodash'
 
 import MyHeader from '../MyHeader'
-// import MovieCards from '../MovieCards'
 import MyContent from '../MyContent'
 import MyFooter from '../MyFooter'
 import SearchService from '../../SearchService'
@@ -10,7 +10,6 @@ import SearchService from '../../SearchService'
 import 'antd/dist/reset.css'
 import './App.css'
 
-// const { Content } = Layout
 export default class App extends Component {
   constructor(props) {
     super(props)
@@ -22,9 +21,16 @@ export default class App extends Component {
       12: 'Adventure',
     }
     this.state = {
+      query: 'search',
       data: null,
+      loading: false,
       error: null,
+      page: 1,
+      totalPages: null,
     }
+
+    // Bind methods
+    this.handleSearch = debounce(this.handleSearch.bind(this), 2000)
   }
 
   getGenres = (genreIds) => {
@@ -35,16 +41,47 @@ export default class App extends Component {
     window.location.reload()
   }
 
-  componentDidMount() {
+  handleSearch(text) {
+    this.setState({ query: text, page: 1 }, this.fetchData) // Reset page to 1 on new search
+  }
+
+  handlePageChange = (page) => {
+    this.setState({ page }, this.fetchData) // Fetch new data on page change
+  }
+
+  fetchData = () => {
+    const { query, page } = this.state
+
+    // if (!query) {
+    //   console.log('Поисковый запрос пуст')
+    //   return
+    // }
+
+    this.setState({ loading: true })
     this.searchService
-      .getResults('return')
+      .getResults(query, page)
       .then((data) => {
-        this.setState({ data: data.results })
+        this.setState({ data: data.results, totalPages: data.total_pages, loading: false })
       })
       .catch((error) => {
         console.error('Error fetching data:', error)
-        this.setState({ error: 'Ошибка при загрузке данных' })
+        this.setState({ error: 'Ошибка при загрузке данных', loading: false })
       })
+  }
+
+  componentDidMount() {
+    this.fetchData()
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.query !== this.state.query || prevState.page !== this.state.page) {
+      if (this.state.query) {
+        this.fetchData()
+      } else {
+        // console.log('Запрос пустой')
+        this.setState({ data: null, error: null, loading: false })
+      }
+    }
   }
 
   render() {
@@ -53,45 +90,14 @@ export default class App extends Component {
         <MyHeader />
         <Layout>
           <MyContent
+            handleSearch={this.handleSearch}
             handleClickBtn={this.handleClickBtn}
             getGenres={this.getGenres}
             state={this.state}
             genreMapping={this.genreMapping}
           />
-          {/*<Content>*/}
-          {/*  /!*<h1 style={{ textAlign: 'center', margin: '20px 0' }}>Movie App</h1>*!/*/}
-          {/*  <div className="inner-content">*/}
-          {/*    <Input placeholder="Type to search..." style={{ width: '100%', marginBottom: 34 }} />*/}
-          {/*    {this.state.error ? (*/}
-          {/*      // <div style={{ color: 'red', textAlign: 'center' }}>{this.state.error}</div>*/}
-          {/*      <>*/}
-          {/*        <Result*/}
-          {/*          status="404"*/}
-          {/*          title="404"*/}
-          {/*          subTitle={`Sorry, ${this.state.error}`}*/}
-          {/*          extra={*/}
-          {/*            <Button type="primary" onClick={this.handleClickBtn}>*/}
-          {/*              Update page now*/}
-          {/*            </Button>*/}
-          {/*          }*/}
-          {/*        />*/}
-          {/*        <Alert message="Error" description={this.state.error} type="error" showIcon />*/}
-          {/*      </>*/}
-          {/*    ) : this.state.data ? (*/}
-          {/*      <MovieCards getGenres={this.getGenres} cards={this.state.data} />*/}
-          {/*    ) : (*/}
-          {/*      // <div style={{ textAlign: 'center' }}>Loading...</div>*/}
-          {/*      <div className="spinner-wrapper">*/}
-          {/*        <Spin size="large" />*/}
-          {/*      </div>*/}
-          {/*    )}*/}
-          {/*  </div>*/}
-          {/*</Content>*/}
         </Layout>
-        {/*<Footer style={{ backgroundColor: '#F0EFEF' }}>*/}
-        {/*  <Pagination align="center" defaultCurrent={1} total={50} />*/}
-        {/*</Footer>*/}
-        <MyFooter />
+        <MyFooter totalPages={this.state.totalPages} handlePageChange={this.handlePageChange} />
       </Layout>
     )
   }
