@@ -1,9 +1,10 @@
 import React from 'react'
 
 import MovieCard from '../MovieCard'
-import './MovieCards.css' // Обновите стили, если необходимо
 
-const MovieCards = ({ cards, getGenres }) => {
+import './MovieCards.css'
+
+const MovieCards = ({ cards, rateMovie }) => {
   // Проверка наличия и корректности данных перед использованием метода map
   if (!cards || !Array.isArray(cards)) {
     return <div>❌ No movies available</div> // Сообщение, если карты не переданы или не массив
@@ -20,7 +21,7 @@ const MovieCards = ({ cards, getGenres }) => {
       }}
     >
       {cards.map((card, index) => (
-        <MovieCard key={`${card.title}-${index}`} card={card} getGenres={getGenres} />
+        <MovieCard rateMovie={rateMovie} key={`${card.title}-${index}`} card={card} />
       ))}
     </ul>
   )

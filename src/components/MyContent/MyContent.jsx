@@ -1,24 +1,31 @@
-import { Spin, Layout, Result } from 'antd'
 import React from 'react'
+import { Spin, Layout, Result } from 'antd'
 
 import MovieCards from '../MovieCards'
 import ErrorIndicator from '../ErrorIndicator'
 import SearchComponent from '../SearchComponent'
+import './MyContent.css'
 
 const { Content } = Layout
 
-const MyContent = ({ handleClickBtn, getGenres, state, genreMapping, handleSearch }) => {
+const MyContent = ({ handleClickBtn, getGenres, state, genreMapping, handleSearch, rateMovie, userRating }) => {
   return (
     <Content>
       <div className="inner-content">
-        <SearchComponent handleSearch={handleSearch} />
+        {handleSearch && <SearchComponent handleSearch={handleSearch} />}
         {state.error ? (
           <ErrorIndicator state={state} handleClickBtn={handleClickBtn} />
         ) : state.data ? (
-          state.data.length === 0 || state.query === 0 ? (
-            <Result title="No movies found" subTitle="Please try again." />
+          state.data.length === 0 ? (
+            <Result title="Ничего не найдено." subTitle="Измените поисковый запрос." />
           ) : (
-            <MovieCards genreMapping={genreMapping} getGenres={getGenres} cards={state.data} />
+            <MovieCards
+              userRating={userRating} // Ensure this matches what MovieCards expects
+              rateMovie={rateMovie}
+              genreMapping={genreMapping}
+              getGenres={getGenres}
+              cards={state.data}
+            />
           )
         ) : (
           <div className="spinner-wrapper">

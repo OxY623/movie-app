@@ -2,6 +2,7 @@ import React from 'react'
 import { Pagination, Layout } from 'antd'
 
 const { Footer } = Layout
+import './MyFooter.css'
 const MyFooter = ({ totalPages, handlePageChange }) => {
   return (
     <Footer style={{ backgroundColor: '#F0EFEF' }}>

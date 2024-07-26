@@ -1,0 +1,60 @@
+.spinner-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.card-item {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.card-item__card {
+    display: flex;
+    position: relative;
+}
+
+.card-item__rating-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    border-radius: 50%;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    width: 50px;
+    height: 50px;
+    line-height: 40px;
+}
+
+.card-item__image {
+    width: 150px;
+    height: 225px;
+}
+
+.card-item__title {
+    font-size: 16px;
+    margin: 0;
+}
+
+.card-item__rating {
+    font-size: 14px;
+    color: #666;
+}
+
+.card-item__release-date {
+    font-size: 12px;
+    color: #888;
+}
+
+.card-item__genres {
+    margin: 10px 0;
+}
+
+.card-item__overview {
+    font-size: 14px;
+    color: #444;
+}

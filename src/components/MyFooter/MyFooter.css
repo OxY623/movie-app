@@ -1,0 +1,15 @@
+.ant-pagination-item,
+.ant-pagination-item-active {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.ant-pagination-item a,
+.ant-pagination-item-active a {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100%;
+    height: 100%;
+}
