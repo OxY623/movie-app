@@ -31,7 +31,7 @@ import './MovieCards.css'
 
 const MovieCards = ({ cards, rateMovie }) => {
   if (!cards || !Array.isArray(cards)) {
-    return <div>❌ No movies available</div> // Сообщение, если карты не переданы или не массив
+    return <div>❌ No movies available</div> // Сообщение, если фильмы не переданы или не массив
   }
 
   return (

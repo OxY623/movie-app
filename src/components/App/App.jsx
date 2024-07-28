@@ -63,63 +63,80 @@ class App extends Component {
     }
   }
 
-  rateMovie = (movieId, rating) => {
+  rateMovie = async (movieId, rating) => {
     const { guestSessionId } = this.props
-    // eslint-disable-next-line no-undef
-    const rateUrl = `${baseUrl}/3/movie/${movieId}/rating?api_key=${process.env.REACT_APP_API_KEY}&guest_session_id=${guestSessionId}`
+    const apiUrl = `${baseUrl}/3/movie/${movieId}/rating?api_key=${process.env.REACT_APP_API_KEY}&guest_session_id=${guestSessionId}`
+
     const options = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
       },
-      body: JSON.stringify({
-        value: rating,
-      }),
+      body: JSON.stringify({ value: rating }),
     }
 
-    fetch(rateUrl, options)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! Status: ${res.status} ${res.statusText}`)
-        }
-        return res.json()
-      })
-      .then((data) => {
-        if (data.status_code === 1 || data.status_code === 12 || data.status_code === 13) {
-          console.log(`Movie ${movieId} rated successfully!`)
-          this.setState((state) => {
-            const ratedMovieIndex = state.ratedData.findIndex((movie) => movie.id === movieId)
-            let updatedRatedData
-            if (ratedMovieIndex > -1) {
-              // Обновление рейтинга для существующего фильма
-              updatedRatedData = [...state.ratedData]
-              updatedRatedData[ratedMovieIndex].rating = rating
-            } else {
-              // Добавление нового фильма с рейтингом
-              const ratedMovie = state.data.find((movie) => movie.id === movieId)
-              if (ratedMovie) {
-                ratedMovie.rating = rating
-                updatedRatedData = [...state.ratedData, ratedMovie]
-              } else {
-                console.error('Movie not found in search results.')
-                return
-              }
-            }
-            return { ratedData: updatedRatedData }
-          })
-        } else {
-          console.error('Failed to rate movie:', data)
-        }
-      })
-      .catch((error) => {
-        console.error('❌ Error rating movie:', error)
-      })
+    try {
+      const res = await fetch(apiUrl, options)
+      if (!res.ok) throw new Error(`HTTP error! Status: ${res.status} ${res.statusText}`)
+      const data = await res.json()
+      if ([1, 12, 13].includes(data.status_code)) {
+        console.log(`Movie ${movieId} rated successfully!`)
+        this.updateRatedData(movieId, rating)
+      } else {
+        console.error('Failed to rate movie:', data)
+      }
+    } catch (error) {
+      console.error('❌ Error rating movie:', error)
+    }
+
+    this.fetchRatedMovies()
   }
 
-  // Удаляем функцию addRatedMovieToList, так как ее логика теперь встроена в rateMovie
+  fetchRatedMovies = async () => {
+    const { guestSessionId } = this.props
+    const ratedMoviesUrl = `${baseUrl}/3/guest_session/${guestSessionId}/rated/movies?api_key=${process.env.REACT_APP_API_KEY}`
+
+    try {
+      const res = await fetch(ratedMoviesUrl)
+      if (!res.ok) throw new Error(`HTTP error! Status: ${res.status} ${res.statusText}`)
+      const data = await res.json()
+      const ratedMovies = data.results
+      localStorage.setItem('ratedMovies', JSON.stringify(ratedMovies))
+      this.setState({ ratedData: ratedMovies })
+    } catch (error) {
+      console.error('❌ Error fetching rated movies:', error)
+      const localRatedMovies = localStorage.getItem('ratedMovies')
+      if (localRatedMovies) {
+        this.setState({ ratedData: JSON.parse(localRatedMovies) })
+      }
+    }
+  }
+
+  updateRatedData = (movieId, rating) => {
+    this.setState((state) => {
+      const ratedMovieIndex = state.ratedData.findIndex((movie) => movie.id === movieId)
+      let updatedRatedData
+      if (ratedMovieIndex > -1) {
+        updatedRatedData = [...state.ratedData]
+        updatedRatedData[ratedMovieIndex].rating = rating
+      } else {
+        const ratedMovie = state.data.find((movie) => movie.id === movieId)
+        if (ratedMovie) {
+          ratedMovie.rating = rating
+          updatedRatedData = [...state.ratedData, ratedMovie]
+        } else {
+          console.error('Movie not found in search results.')
+          return
+        }
+      }
+      localStorage.setItem('ratedMovies', JSON.stringify(updatedRatedData))
+      return { ratedData: updatedRatedData }
+    })
+  }
 
   componentDidMount() {
     this.fetchData()
+    this.fetchRatedMovies()
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -130,7 +147,7 @@ class App extends Component {
   }
 
   render() {
-    const { activeTab, data, ratedData, loading, totalPages } = this.state
+    const { activeTab, data, ratedData, loading, totalPages, error } = this.state
 
     const tabsItems = [
       {
@@ -141,7 +158,7 @@ class App extends Component {
             rateMovie={this.rateMovie}
             handleSearch={this.handleSearch}
             handleClickBtn={this.handleClickBtn}
-            state={{ data, loading, error: this.state.error }}
+            state={{ data, loading, error }}
             ratedData={ratedData}
           />
         ),
@@ -153,7 +170,7 @@ class App extends Component {
           <MyContent
             rateMovie={this.rateMovie}
             handleClickBtn={this.handleClickBtn}
-            state={{ data: ratedData, loading, error: this.state.error }}
+            state={{ data: ratedData, loading, error }}
             ratedData={ratedData}
           />
         ),
