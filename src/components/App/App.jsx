@@ -13,7 +13,9 @@ const baseUrl = 'https://api.themoviedb.org'
 class App extends Component {
   constructor(props) {
     super(props)
-    this.searchService = new SearchService(baseUrl, process.env.REACT_APP_API_KEY)
+    // eslint-disable-next-line no-undef
+    this.apiKey = process.env.REACT_APP_API_KEY
+    this.searchService = new SearchService(baseUrl, this.apiKey)
     this.state = {
       query: 'return',
       data: null,
@@ -65,7 +67,7 @@ class App extends Component {
 
   rateMovie = async (movieId, rating) => {
     const { guestSessionId } = this.props
-    const apiUrl = `${baseUrl}/3/movie/${movieId}/rating?api_key=${process.env.REACT_APP_API_KEY}&guest_session_id=${guestSessionId}`
+    const apiUrl = `${baseUrl}/3/movie/${movieId}/rating?api_key=${this.apiKey}&guest_session_id=${guestSessionId}`
 
     const options = {
       method: 'POST',
@@ -94,8 +96,8 @@ class App extends Component {
 
   fetchRatedMovies = async () => {
     const { guestSessionId } = this.props
-    const ratedMoviesUrl = `${baseUrl}/3/guest_session/${guestSessionId}/rated/movies?api_key=${process.env.REACT_APP_API_KEY}`
-
+    const ratedMoviesUrl = `${baseUrl}/3/guest_session/${guestSessionId}/rated/movies?api_key=${this.apiKey}`
+    // https://api.themoviedb.org/3/guest_session/de3c11f0d5944315a3beb9d04bae2fe9/rated/movies?api_key=be07142a60bd7787c2f5699d101a5566
     try {
       const res = await fetch(ratedMoviesUrl)
       if (!res.ok) throw new Error(`HTTP error! Status: ${res.status} ${res.statusText}`)
