@@ -21,4 +21,6 @@ if (rootElement) {
       </AuthProvider>
     </React.StrictMode>
   )
+} else {
+  throw new Error('No root element found')
 }

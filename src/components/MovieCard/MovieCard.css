@@ -1,0 +1,388 @@
+.ant-card-body {
+    height: 100% !important;
+}
+
+.card-item {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+/* Контейнер карточки */
+.card-item__card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+    transition: transform 0.2s;
+}
+
+.card-item__card:hover {
+    transform: scale(1.02);
+}
+
+/* Контейнер контента */
+.card-item__content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-grow: 1;
+    /*padding: 16px;*/
+    overflow-x: hidden;
+    height: 100% !important;
+}
+
+/* Изображение карточки */
+.card-item__image {
+    width: 40%;
+    height: auto;
+    /*margin-bottom: 16px;*/
+    border-radius: 10px;
+}
+
+/* Детали карточки */
+.card-item__details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+    width: 60%;
+    height: 100%;
+    padding-left: 20px;
+    position: relative;
+}
+
+/* Заголовок карточки */
+.card-item__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    width: 100%;
+}
+
+/* Заголовок фильма */
+.card-item__title {
+    max-width: 132px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 28px;
+    text-align: left;
+    margin-bottom: 0;
+}
+
+/* Рейтинг фильма */
+.card-item__rating {
+    border: 2px solid;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgb(0, 0, 0);
+    font-size: 12px;
+    line-height: 1;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    margin-right: 9px;
+}
+
+/* Дата выхода фильма */
+.card-item__release-date {
+    color: rgb(130, 126, 126);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 22px;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+/* Жанры фильма */
+.card-item__genres {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+
+.card-item__genres::before,
+.card-item__genres::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 30px;
+    pointer-events: none;
+}
+
+.card-item__genres::before {
+    left: 5%;
+    top: 27%;
+    background: linear-gradient(to right, white, transparent);
+    height: 10%;
+    z-index: 10;
+}
+
+.card-item__genres::after {
+    right: 0;
+    background: linear-gradient(to left, white, transparent);
+    height: 10%;
+    z-index: 10;
+    top: 27%;
+}
+
+.card-item__genres::-webkit-scrollbar {
+    display: none;
+}
+
+.card-item__genres .ant-tag {
+    margin-right: 5px;
+    flex: 0 0 auto;
+}
+
+
+/* Описание фильма */
+.card-item__overview {
+    flex-grow: 1;
+    margin-top: 8px;
+    max-width: 228px;
+    max-height: 129px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 6;
+    line-height: 1.5;
+    margin-right: 20px;
+    text-align: left;
+}
+
+/* Рейтинг */
+.ant-rate {
+    margin-top: 0;
+    width: 239px;
+    height: 46px;
+    display: flex;
+    justify-content: flex-start;
+    /*align-self: end;*/
+    /*flex-wrap: wrap;*/
+}
+
+.ant-rate-star {
+    font-size: 24px;
+}
+
+/* Адаптивность */
+@media (max-width: 1440px) {
+    .card-item__genres::before {
+        top: 26%;
+    }
+
+    .card-item__genres::after {
+        top: 26%;
+    }
+}
+
+@media (max-width: 1024px) {
+    .card-item__genres::before {
+        top: 24%;
+    }
+
+    .card-item__genres::after {
+        top: 24%;
+    }
+}
+
+@media (max-width: 1170px) {
+    .ant-rate-star {
+        font-size: 20px;
+        margin-right: 2px;
+    }
+}
+
+@media (max-width: 1040px) {
+    .ant-rate-star {
+        font-size: 15px;
+        margin-right: 2px;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .card-item__overview {
+        max-width: 95%;
+        max-height: 180px;
+        -webkit-line-clamp: 4;
+        margin-top: 10px;
+        margin-right: 10px;
+        /* position: absolute; */
+        z-index: 20;
+        margin-left: -15%;
+    }
+
+    .card-item__genres::before {
+        left: 19%;
+        top: 26%;
+    }
+
+    .card-item__genres::after {
+        top: 26%;
+    }
+
+    .ant-rate {
+        justify-content: flex-end;
+        margin-right: 10px;
+        margin-left: auto;
+        align-items: center;
+        overflow-x: scroll;
+    }
+
+    .ant-rate::-webkit-scrollbar {
+        display: none;
+    }
+
+    .ant-rate-star {
+        font-size: 15px;
+        margin-right: 2px;
+    }
+
+    .card-item__header {
+        /*margin-left: 72px;*/
+        margin-top: 0;
+    }
+
+    .card-item__content {
+        flex-direction: row;
+        align-items: flex-start;
+        padding-top: 6px;
+        padding-left: 10px;
+    }
+
+    .card-item__image {
+        width: 60px;
+        height: 91px;
+        z-index: 100;
+        position: absolute;
+    }
+
+    .card-item__details {
+        flex: 1;
+        padding-left: 72px;
+    }
+
+    /*.card-item__overview {*/
+    /*    max-width: 122%;*/
+    /*    max-height: 180px;*/
+    /*    -webkit-line-clamp: 4;*/
+    /*    margin-top: 10px;
+    /*    margin-right: 10px;*/
+    /*    !*position: absolute;*!*/
+    /*    z-index: 20;*/
+    /*    margin-left: -22%;*/
+    /*}*/
+    .card-item__genres {
+        /*margin-left: 72px;*/
+        margin-right: 10px;
+    }
+}
+
+@media (max-width: 620px) {
+    .card-item__genres::before {
+        left: 24%;
+        top: 26%;
+    }
+
+    .card-item__genres::after {
+        top: 26%;
+    }
+}
+
+@media (max-width: 577px) {
+    .card-item__genres::before {
+        left: 27%;
+        top: 26%;
+    }
+
+    .card-item__genres::after {
+        top: 26%;
+    }
+}
+
+@media (max-width: 576px) {
+    .card-item__genres::before {
+        background: none;
+    }
+
+    .card-item__genres::after {
+        background: none;
+    }
+}
+
+@media (max-width: 420px) {
+    .body {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .ant-row {
+        margin-left: -35px;
+        margin-right: -35px;
+    }
+
+    .ant-col {
+        padding-left: 35px;
+        padding-right: 35px;
+    }
+
+    .card-item__overview {
+        max-height: 92px;
+        -webkit-line-clamp: 4;
+    }
+
+    .ant-rate {
+        /*margin-right: auto;*/
+        overflow-x: scroll;
+    }
+
+    .ant-rate::-webkit-scrollbar {
+        display: none;
+    }
+
+    .ant-rate-star {
+        font-size: 15px;
+        margin-right: 1px;
+    }
+
+    .card-item__overview {
+        max-height: 180px;
+        -webkit-line-clamp: 4;
+        margin-top: 10px;
+        margin-right: 10px;
+        /*position: absolute;*/
+        z-index: 20;
+        margin-left: -22%;
+        max-width: 367px;
+    }
+}
+
+@media (max-width: 320px) {
+    .ant-rate {
+        justify-content: flex-start;
+    }
+
+    .ant-rate-star {
+        font-size: 10px;
+        margin-right: 1px;
+    }
+}
+
