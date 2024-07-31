@@ -144,7 +144,8 @@ class App extends Component {
 
   componentDidMount() {
     this.fetchData()
-    // this.fetchRatedMovies();
+    // this.fetchRatedMovies()
+    // при первом запросе если фильмов нет ответ 404
   }
 
   componentDidUpdate(prevProps, prevState) {
