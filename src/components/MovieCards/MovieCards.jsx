@@ -13,7 +13,7 @@ const MovieCards = ({ cards, rateMovie }) => {
   return (
     <Row gutter={[35, 35]}>
       {cards.map((card, index) => (
-        <Col xs={24} sm={12} md={12} lg={12} key={`${card.title}-${index}`}>
+        <Col xs={24} sm={24} md={12} lg={12} key={`${card.title}-${index}`}>
           <ErrorBoundary key={card.id}>
             <MovieCard rateMovie={rateMovie} card={card} />
           </ErrorBoundary>

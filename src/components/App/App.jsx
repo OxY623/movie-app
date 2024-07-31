@@ -108,7 +108,11 @@ class App extends Component {
       })
       this.saveRatedMoviesToLocalStorage(ratedMovies.results)
     } catch (error) {
-      this.setState({ error: '❌ Ошибка при загрузке данных', loading: false })
+      if (error.message.includes('404')) {
+        this.setState({ ratedData: [], loading: false })
+      } else {
+        this.setState({ error: '❌ Ошибка при загрузке данных', loading: false })
+      }
     }
   }
 

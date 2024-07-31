@@ -3,10 +3,8 @@ import { Alert } from 'antd'
 
 import APIService from '../service/APIService'
 
-// Создание контекста для аутентификации
 const AuthContext = createContext()
 
-// Компонент-поставщик контекста
 export const AuthProvider = ({ children }) => {
   const [isAuth, setIsAuth] = useState(() => !!sessionStorage.getItem('session_id'))
   const [errorMessage, setErrorMessage] = useState('')
@@ -17,7 +15,7 @@ export const AuthProvider = ({ children }) => {
     // Обработчик события оффлайна
     const handleOffline = () => {
       if (!isAuth) {
-        console.log('You are offline')
+        // console.log('You are offline')
         setErrorMessage('Connection lost')
       }
     }
@@ -33,8 +31,6 @@ export const AuthProvider = ({ children }) => {
         setErrorMessage(error.message || 'Something went wrong')
       }
     }
-
-    // Если пользователь не аутентифицирован, запрашиваем новый гест-сессию
     if (!isAuth) {
       fetchGuestSession()
     }
@@ -55,5 +51,4 @@ export const AuthProvider = ({ children }) => {
   )
 }
 
-// Хук для использования контекста аутентификации
 export const useAuth = () => useContext(AuthContext)
