@@ -126,8 +126,10 @@ class App extends Component {
 
   saveRatedMoviesToLocalStorage = (ratedMovies) => {
     const { guestSessionId } = this.props
+    console.log(ratedMovies)
     const ratedMoviesWithGuestId = ratedMovies.map((movie) => ({
-      ...movie,
+      id: movie.id,
+      rating: movie.rating,
       guestSessionId,
     }))
     localStorage.setItem('ratedMovies', JSON.stringify(ratedMoviesWithGuestId))
@@ -153,6 +155,10 @@ class App extends Component {
     if (activeTab === '2' && activeTab !== prevState.activeTab) {
       this.fetchRatedMovies()
     }
+  }
+
+  componentDidUnmount() {
+    localStorage.removeItem('ratedMovies')
   }
 
   render() {
