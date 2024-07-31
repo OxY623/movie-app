@@ -8,7 +8,7 @@ import './MyContent.css'
 
 const { Content } = Layout
 
-const MyContent = ({ handleClickBtn, getGenres, state, genreMapping, handleSearch, rateMovie, userRating }) => {
+const MyContent = ({ handleClickBtn, getGenres, state, genreMapping, handleSearch, rateMovie }) => {
   return (
     <Content>
       <div className="inner-content">
@@ -19,13 +19,7 @@ const MyContent = ({ handleClickBtn, getGenres, state, genreMapping, handleSearc
           state.data.length === 0 ? (
             <Result title="Ничего не найдено." subTitle="Измените поисковый запрос." />
           ) : (
-            <MovieCards
-              userRating={userRating} // Ensure this matches what MovieCards expects
-              rateMovie={rateMovie}
-              genreMapping={genreMapping}
-              getGenres={getGenres}
-              cards={state.data}
-            />
+            <MovieCards rateMovie={rateMovie} genreMapping={genreMapping} getGenres={getGenres} cards={state.data} />
           )
         ) : (
           <div className="spinner-wrapper">

@@ -1,11 +1,11 @@
 import React from 'react'
 
-import { useAuth } from '../AuthContext'
+import App from '../components/App'
 
-import App from './App'
+import { useAuth } from './AuthContext'
 
 import 'antd/dist/reset.css'
-import './App/App.css'
+import '../components/App/App.css'
 
 // Использование хука useAuth для получения данных о аутентификации
 const AppWithAuth = () => {

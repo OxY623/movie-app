@@ -1,9 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 
-import { AuthProvider } from './AuthContext'
-import { GenreProvider } from './GenreContext'
-import AppWithAuth from './components/AppWithAuth'
+import { AuthProvider } from './context/AuthContext'
+import { GenreProvider } from './context/GenreContext'
+import AppWithAuth from './context/AppWithAuth'
 
 import './index.css'
 

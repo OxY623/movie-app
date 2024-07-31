@@ -32,7 +32,6 @@
     flex-direction: row;
     justify-content: space-between;
     flex-grow: 1;
-    /*padding: 16px;*/
     overflow-x: hidden;
     height: 100% !important;
 }
@@ -41,7 +40,6 @@
 .card-item__image {
     width: 40%;
     height: auto;
-    /*margin-bottom: 16px;*/
     border-radius: 10px;
 }
 
@@ -113,6 +111,7 @@
     overflow-x: scroll;
     overflow-y: hidden;
     white-space: nowrap;
+    position: relative;
 }
 
 .card-item__genres::before,
@@ -150,7 +149,6 @@
     flex: 0 0 auto;
 }
 
-
 /* Описание фильма */
 .card-item__overview {
     flex-grow: 1;
@@ -174,8 +172,6 @@
     height: 46px;
     display: flex;
     justify-content: flex-start;
-    /*align-self: end;*/
-    /*flex-wrap: wrap;*/
 }
 
 .ant-rate-star {
@@ -193,16 +189,6 @@
     }
 }
 
-@media (max-width: 1024px) {
-    .card-item__genres::before {
-        top: 24%;
-    }
-
-    .card-item__genres::after {
-        top: 24%;
-    }
-}
-
 @media (max-width: 1170px) {
     .ant-rate-star {
         font-size: 20px;
@@ -217,15 +203,23 @@
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+    .card-item__genres::before {
+        top: 24%;
+    }
 
+    .card-item__genres::after {
+        top: 24%;
+    }
+}
+
+@media (max-width: 920px) {
     .card-item__overview {
         max-width: 95%;
         max-height: 180px;
         -webkit-line-clamp: 4;
         margin-top: 10px;
         margin-right: 10px;
-        /* position: absolute; */
         z-index: 20;
         margin-left: -15%;
     }
@@ -257,7 +251,6 @@
     }
 
     .card-item__header {
-        /*margin-left: 72px;*/
         margin-top: 0;
     }
 
@@ -280,18 +273,7 @@
         padding-left: 72px;
     }
 
-    /*.card-item__overview {*/
-    /*    max-width: 122%;*/
-    /*    max-height: 180px;*/
-    /*    -webkit-line-clamp: 4;*/
-    /*    margin-top: 10px;
-    /*    margin-right: 10px;*/
-    /*    !*position: absolute;*!*/
-    /*    z-index: 20;*/
-    /*    margin-left: -22%;*/
-    /*}*/
     .card-item__genres {
-        /*margin-left: 72px;*/
         margin-right: 10px;
     }
 }
@@ -328,6 +310,36 @@
     }
 }
 
+@media (max-width: 500px) {
+    .card-item__overview {
+        max-height: 92px;
+        -webkit-line-clamp: 4;
+    }
+
+    .ant-rate {
+        overflow-x: scroll;
+    }
+
+    .ant-rate::-webkit-scrollbar {
+        display: none;
+    }
+
+    .ant-rate-star {
+        font-size: 15px;
+        margin-right: 1px;
+    }
+
+    .card-item__overview {
+        max-height: 180px;
+        -webkit-line-clamp: 4;
+        margin-top: 10px;
+        margin-right: 10px;
+        z-index: 20;
+        margin-left: -22%;
+        max-width: 367px;
+    }
+}
+
 @media (max-width: 420px) {
     .body {
         overflow-x: hidden;
@@ -350,7 +362,6 @@
     }
 
     .ant-rate {
-        /*margin-right: auto;*/
         overflow-x: scroll;
     }
 
@@ -368,7 +379,6 @@
         -webkit-line-clamp: 4;
         margin-top: 10px;
         margin-right: 10px;
-        /*position: absolute;*/
         z-index: 20;
         margin-left: -22%;
         max-width: 367px;
@@ -385,4 +395,3 @@
         margin-right: 1px;
     }
 }
-

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { Alert } from 'antd'
 
-import { headers } from './http'
+import { headers } from '../service/http'
 
 // Создание контекста для аутентификации
 const AuthContext = createContext()

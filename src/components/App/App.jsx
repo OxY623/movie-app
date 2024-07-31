@@ -4,26 +4,24 @@ import { debounce } from 'lodash'
 
 import MyContent from '../MyContent'
 import MyFooter from '../MyFooter'
-import SearchService from '../../SearchService'
+import APIService from '../../service/APIService'
 import 'antd/dist/reset.css'
 import './App.css'
-
-const baseUrl = 'https://api.themoviedb.org'
 
 class App extends Component {
   constructor(props) {
     super(props)
-    // eslint-disable-next-line no-undef
-    this.apiKey = process.env.REACT_APP_API_KEY
-    this.searchService = new SearchService(baseUrl, this.apiKey)
+    this.serviceAPI = new APIService()
     this.state = {
       query: 'return',
       data: null,
-      ratedData: [],
+      ratedData: null,
       loading: false,
       error: null,
       page: 1,
+      ratedPage: 1,
       totalPages: null,
+      ratedTotalPages: null,
       activeTab: '1',
     }
 
@@ -34,7 +32,7 @@ class App extends Component {
     window.location.reload()
   }
 
-  handleSearch(text) {
+  handleSearch = (text) => {
     if (text.length > 0) {
       this.setState({ query: text, page: 1 }, this.fetchData)
     } else {
@@ -46,110 +44,119 @@ class App extends Component {
     this.setState({ page }, this.fetchData)
   }
 
+  handleRatedPageChange = (ratedPage) => {
+    this.setState({ ratedPage }, this.fetchRatedMovies)
+  }
+
   handleTabChange = (activeTab) => {
-    this.setState({ activeTab })
+    this.setState({ activeTab }, () => {
+      if (activeTab === '2') {
+        this.fetchRatedMovies()
+      }
+    })
   }
 
   fetchData = async () => {
     const { query, page } = this.state
     if (!query) return
 
-    this.setState({ loading: true })
+    this.setState({ loading: true, error: null })
     try {
-      const data = await this.searchService.getResults(query, page)
-      console.log(data)
-      this.setState({ data: data.results, totalPages: data.total_pages, loading: false })
+      const data = await this.serviceAPI.getResults(query, page)
+      this.setState({
+        data: data.results.map((movie) => ({
+          ...movie,
+          rating: this.getRatingFromLocalStorage(movie.id) || 0,
+        })),
+        totalPages: data.total_pages,
+        loading: false,
+      })
     } catch (error) {
-      console.error('❌ Error fetching data:', error)
       this.setState({ error: '❌ Ошибка при загрузке данных', loading: false })
     }
   }
 
   rateMovie = async (movieId, rating) => {
+    this.setState({ loading: true })
     const { guestSessionId } = this.props
-    const apiUrl = `${baseUrl}/3/movie/${movieId}/rating?api_key=${this.apiKey}&guest_session_id=${guestSessionId}`
-
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-      },
-      body: JSON.stringify({ value: rating }),
-    }
-
     try {
-      const res = await fetch(apiUrl, options)
-      if (!res.ok) throw new Error(`HTTP error! Status: ${res.status} ${res.statusText}`)
-      const data = await res.json()
+      const data = await this.serviceAPI.rateMovie(movieId, rating, guestSessionId)
       if ([1, 12, 13].includes(data.status_code)) {
-        console.log(`Movie ${movieId} rated successfully!`)
         this.updateRatedData(movieId, rating)
+        this.setState((state) => ({
+          data: state.data.map((movie) => (movie.id === movieId ? { ...movie, rating } : movie)),
+          loading: false,
+        }))
       } else {
-        console.error('Failed to rate movie:', data)
+        this.setState({ error: `Failed to rate movie: ${data}`, loading: false })
       }
     } catch (error) {
-      console.error('❌ Error rating movie:', error)
+      this.setState({ error: `❌ Error rating movie: ${error}`, loading: false })
     }
-
-    this.fetchRatedMovies()
   }
 
   fetchRatedMovies = async () => {
     const { guestSessionId } = this.props
-    const ratedMoviesUrl = `${baseUrl}/3/guest_session/${guestSessionId}/rated/movies?api_key=${this.apiKey}`
-    // https://api.themoviedb.org/3/guest_session/de3c11f0d5944315a3beb9d04bae2fe9/rated/movies?api_key=be07142a60bd7787c2f5699d101a5566
+    const { ratedPage } = this.state
+    this.setState({ loading: true, error: null })
     try {
-      const res = await fetch(ratedMoviesUrl)
-      if (!res.ok) throw new Error(`HTTP error! Status: ${res.status} ${res.statusText}`)
-      const data = await res.json()
-      const ratedMovies = data.results
-      localStorage.setItem('ratedMovies', JSON.stringify(ratedMovies))
-      this.setState({ ratedData: ratedMovies })
+      const ratedMovies = await this.serviceAPI.getRatedMovies(guestSessionId, ratedPage)
+      this.setState({
+        ratedData: ratedMovies.results,
+        ratedTotalPages: ratedMovies.total_pages,
+        loading: false,
+      })
+      this.saveRatedMoviesToLocalStorage(ratedMovies.results)
     } catch (error) {
-      console.error('❌ Error fetching rated movies:', error)
-      const localRatedMovies = localStorage.getItem('ratedMovies')
-      if (localRatedMovies) {
-        this.setState({ ratedData: JSON.parse(localRatedMovies) })
-      }
+      this.setState({ error: '❌ Ошибка при загрузке данных', loading: false })
     }
   }
 
   updateRatedData = (movieId, rating) => {
     this.setState((state) => {
-      const ratedMovieIndex = state.ratedData.findIndex((movie) => movie.id === movieId)
-      let updatedRatedData
-      if (ratedMovieIndex > -1) {
-        updatedRatedData = [...state.ratedData]
-        updatedRatedData[ratedMovieIndex].rating = rating
-      } else {
-        const ratedMovie = state.data.find((movie) => movie.id === movieId)
-        if (ratedMovie) {
-          ratedMovie.rating = rating
-          updatedRatedData = [...state.ratedData, ratedMovie]
-        } else {
-          console.error('Movie not found in search results.')
-          return
-        }
-      }
-      localStorage.setItem('ratedMovies', JSON.stringify(updatedRatedData))
+      const updatedRatedData = state.ratedData
+        ? state.ratedData.map((movie) => (movie.id === movieId ? { ...movie, rating } : movie))
+        : []
+
+      this.saveRatedMoviesToLocalStorage(updatedRatedData)
+
       return { ratedData: updatedRatedData }
     })
   }
 
+  saveRatedMoviesToLocalStorage = (ratedMovies) => {
+    const { guestSessionId } = this.props
+    const ratedMoviesWithGuestId = ratedMovies.map((movie) => ({
+      ...movie,
+      guestSessionId,
+    }))
+    localStorage.setItem('ratedMovies', JSON.stringify(ratedMoviesWithGuestId))
+  }
+
+  getRatingFromLocalStorage = (movieId) => {
+    const { guestSessionId } = this.props
+    const ratedMovies = JSON.parse(localStorage.getItem('ratedMovies')) || []
+    const movie = ratedMovies.find((movie) => movie.id === movieId && movie.guestSessionId === guestSessionId)
+    return movie ? movie.rating : 0
+  }
+
   componentDidMount() {
     this.fetchData()
-    this.fetchRatedMovies()
+    // this.fetchRatedMovies();
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { query, page } = this.state
+    const { query, page, activeTab } = this.state
     if (query !== prevState.query || page !== prevState.page) {
       this.fetchData()
+    }
+    if (activeTab === '2' && activeTab !== prevState.activeTab) {
+      this.fetchRatedMovies()
     }
   }
 
   render() {
-    const { activeTab, data, ratedData, loading, totalPages, error } = this.state
+    const { activeTab, data, ratedData, loading, totalPages, ratedTotalPages, error } = this.state
 
     const tabsItems = [
       {
@@ -169,12 +176,15 @@ class App extends Component {
         key: '2',
         label: 'Rated',
         children: (
-          <MyContent
-            rateMovie={this.rateMovie}
-            handleClickBtn={this.handleClickBtn}
-            state={{ data: ratedData, loading, error }}
-            ratedData={ratedData}
-          />
+          <div>
+            <MyContent
+              rateMovie={this.rateMovie}
+              handleClickBtn={this.handleClickBtn}
+              state={{ data: ratedData, loading, error }}
+              ratedData={ratedData}
+            />
+            <MyFooter totalPages={ratedTotalPages} handlePageChange={this.handleRatedPageChange} />
+          </div>
         ),
       },
     ]
